@@ -1,16 +1,19 @@
-public class PalindromeCheckerApp {
+class PalindromeChecker {
+    private String input;
 
-    // Method for UC10: Case-Insensitive & Space-Ignored Palindrome
-    public static boolean isPalindrome(String input) {
+    // Constructor
+    public PalindromeChecker(String input) {
         // Normalize string: remove spaces and convert to lowercase
-        String normalized = input.replaceAll("\\s+", "").toLowerCase();
+        this.input = input.replaceAll("\\s+", "").toLowerCase();
+    }
 
-        // Check palindrome using two-pointer technique
+    // Public method to check palindrome
+    public boolean checkPalindrome() {
         int start = 0;
-        int end = normalized.length() - 1;
+        int end = input.length() - 1;
 
         while (start < end) {
-            if (normalized.charAt(start) != normalized.charAt(end)) {
+            if (input.charAt(start) != input.charAt(end)) {
                 return false;
             }
             start++;
@@ -18,15 +21,17 @@ public class PalindromeCheckerApp {
         }
         return true;
     }
+}
 
-    // Driver code
+// Main application class
+public class PalindromeCheckerApp {
     public static void main(String[] args) {
-        String test1 = "A man a plan a canal Panama";
-        String test2 = "Never Odd Or Even";
-        String test3 = "Hello World";
+        PalindromeChecker checker1 = new PalindromeChecker("Madam");
+        PalindromeChecker checker2 = new PalindromeChecker("Racecar");
+        PalindromeChecker checker3 = new PalindromeChecker("Hello World");
 
-        System.out.println("\"" + test1 + "\" -> " + isPalindrome(test1));
-        System.out.println("\"" + test2 + "\" -> " + isPalindrome(test2));
-        System.out.println("\"" + test3 + "\" -> " + isPalindrome(test3));
+        System.out.println("Madam -> " + checker1.checkPalindrome());
+        System.out.println("Racecar -> " + checker2.checkPalindrome());
+        System.out.println("Hello World -> " + checker3.checkPalindrome());
     }
 }
