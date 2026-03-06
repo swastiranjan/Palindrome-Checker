@@ -2,78 +2,73 @@ import java.util.Deque;
 import java.util.LinkedList;
 import java.util.Stack;
 
-// Step 1: Define the Strategy interface
-interface PalindromeStrategy {
-    boolean checkPalindrome(String input);
-}
+public class PalindromeCheckerApp {
 
-// Step 2: Implement concrete strategies
-
-// Using Stack
-
-class StackStrategy implements PalindromeStrategy {
-    @Override
-    public boolean checkPalindrome(String input) {
+    // --- Strategy 1: Stack-based ---
+    public static boolean stackPalindrome(String input) {
         input = input.replaceAll("\\s+", "").toLowerCase();
-        Stack<Character> stack;
-        stack = new Stack<>();
+        Stack<Character> stack = new Stack<>();
         for (char ch : input.toCharArray()) {
             stack.push(ch);
         }
         for (char ch : input.toCharArray()) {
-            if (ch != stack.pop()) {
-                return false;
-            }
+            if (ch != stack.pop()) return false;
         }
         return true;
     }
-}
 
-
-class DequeStrategy implements PalindromeStrategy {
-    @Override
-    public boolean checkPalindrome(String input) {
+    // --- Strategy 2: Deque-based ---
+    public static boolean dequePalindrome(String input) {
         input = input.replaceAll("\\s+", "").toLowerCase();
         Deque<Character> deque = new LinkedList<>();
         for (char ch : input.toCharArray()) {
             deque.addLast(ch);
         }
         while (deque.size() > 1) {
-            if (deque.removeFirst() != deque.removeLast()) {
-                return false;
-            }
+            if (deque.removeFirst() != deque.removeLast()) return false;
         }
         return true;
     }
-}
 
-// Step 3: Context class that uses a strategy
-class PalindromeService {
-    private PalindromeStrategy strategy;
-
-    // Inject strategy at runtime
-    public PalindromeService(PalindromeStrategy strategy) {
-        this.strategy = strategy;
+    // --- Strategy 3: Recursive ---
+    public static boolean recursivePalindrome(String input, int start, int end) {
+        if (start >= end) return true;
+        if (input.charAt(start) != input.charAt(end)) return false;
+        return recursivePalindrome(input, start + 1, end - 1);
     }
 
-    public boolean validate(String input) {
-        return strategy.checkPalindrome(input);
-    }
-}
+    // --- Performance Comparison ---
+    public static void comparePerformance(String input) {
+        System.out.println("Comparing performance for: \"" + input + "\"");
 
-// Step 4: Main application
-public class PalindromeCheckerApp {
+        // Stack Strategy
+        long startTime = System.nanoTime();
+        boolean stackResult = stackPalindrome(input);
+        long stackTime = System.nanoTime() - startTime;
+
+        // Deque Strategy
+        startTime = System.nanoTime();
+        boolean dequeResult = dequePalindrome(input);
+        long dequeTime = System.nanoTime() - startTime;
+
+        // Recursive Strategy
+        startTime = System.nanoTime();
+        boolean recursiveResult = recursivePalindrome(
+                input.replaceAll("\\s+", "").toLowerCase(),
+                0, input.replaceAll("\\s+", "").toLowerCase().length() - 1
+        );
+        long recursiveTime = System.nanoTime() - startTime;
+
+        // Display results
+        System.out.println("StackStrategy: " + stackResult + " | Time: " + stackTime + " ns");
+        System.out.println("DequeStrategy: " + dequeResult + " | Time: " + dequeTime + " ns");
+        System.out.println("RecursiveStrategy: " + recursiveResult + " | Time: " + recursiveTime + " ns");
+    }
+
+    // Driver code
     public static void main(String[] args) {
-        // Choose Stack strategy
-        PalindromeService stackService = new PalindromeService(new StackStrategy());
-        System.out.println("Using StackStrategy:");
-        System.out.println("Madam -> " + stackService.validate("Madam"));
-        System.out.println("Hello -> " + stackService.validate("Hello"));
-
-        // Choose Deque strategy
-        PalindromeService dequeService = new PalindromeService(new DequeStrategy());
-        System.out.println("\nUsing DequeStrategy:");
-        System.out.println("Racecar -> " + dequeService.validate("Racecar"));
-        System.out.println("World -> " + dequeService.validate("World"));
+        comparePerformance("A man a plan a canal Panama");
+        comparePerformance("racecar");
+        comparePerformance("hello world");
     }
 }
