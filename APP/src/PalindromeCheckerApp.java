@@ -1,35 +1,32 @@
 public class PalindromeCheckerApp {
 
-    // Recursive method to check palindrome
-    public static boolean isPalindromeRecursive(String s, int start, int end) {
-        // Base case: if start crosses end, it's a palindrome
-        if (start >= end) {
-            return true;
-        }
-
-        // If mismatch found
-        if (s.charAt(start) != s.charAt(end)) {
-            return false;
-        }
-
-        // Recursive call: move inward
-        return isPalindromeRecursive(s, start + 1, end - 1);
-    }
-
-    // Public method to call recursion
+    // Method for UC10: Case-Insensitive & Space-Ignored Palindrome
     public static boolean isPalindrome(String input) {
-        input = input.replaceAll("\\s+", "").toLowerCase();
-        return isPalindromeRecursive(input, 0, input.length() - 1);
+        // Normalize string: remove spaces and convert to lowercase
+        String normalized = input.replaceAll("\\s+", "").toLowerCase();
+
+        // Check palindrome using two-pointer technique
+        int start = 0;
+        int end = normalized.length() - 1;
+
+        while (start < end) {
+            if (normalized.charAt(start) != normalized.charAt(end)) {
+                return false;
+            }
+            start++;
+            end--;
+        }
+        return true;
     }
 
     // Driver code
     public static void main(String[] args) {
-        String test1 = "madam";
-        String test2 = "racecar";
-        String test3 = "hello";
+        String test1 = "A man a plan a canal Panama";
+        String test2 = "Never Odd Or Even";
+        String test3 = "Hello World";
 
-        System.out.println(test1 + " -> " + isPalindrome(test1));
-        System.out.println(test2 + " -> " + isPalindrome(test2));
-        System.out.println(test3 + " -> " + isPalindrome(test3));
+        System.out.println("\"" + test1 + "\" -> " + isPalindrome(test1));
+        System.out.println("\"" + test2 + "\" -> " + isPalindrome(test2));
+        System.out.println("\"" + test3 + "\" -> " + isPalindrome(test3));
     }
 }
