@@ -1,44 +1,37 @@
+import java.util.Deque;
 import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Stack;
-import java.util.Scanner;
 
 public class PalindromeCheckerApp{
 
-    public static void checkPalindrome(String input) {
-        String cleanText = input.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
+    public static boolean isPalindrome(String input) {
+        input = input.replaceAll("\\s+", "").toLowerCase();
 
-        Queue<Character> queue = new LinkedList<>();
-        Stack<Character> stack = new Stack<>();
+        Deque<Character> deque = new LinkedList<>();
 
-        for (char c : cleanText.toCharArray()) {
-            queue.add(c);
-            stack.push(c);
+        for (char ch : input.toCharArray()) {
+            deque.addLast(ch);
         }
-        boolean isPalindrome = true;
-        while (!queue.isEmpty()) {
-            char fromQueue = queue.remove();
-            char fromStack = stack.pop();
 
-            if (fromQueue != fromStack) {
-                isPalindrome = false;
-                break;
+        while (deque.size() > 1) {
+            char front = deque.removeFirst();
+            char rear = deque.removeLast();
+
+            if (front != rear) {
+                return false;
             }
         }
 
-        if (isPalindrome) {
-            System.out.println("Result: It's a Palindrome!");
-        } else {
-            System.out.println("Result: Not a palindrome.");
-        }
+        return true;
     }
 
+    // Driver code
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Enter a word or phrase: ");
-        String userInput = scanner.nextLine();
+        String test1 = "madam";
+        String test2 = "racecar";
+        String test3 = "hello";
 
-        checkPalindrome(userInput);
-        scanner.close();
+        System.out.println(test1 + " -> " + isPalindrome(test1));
+        System.out.println(test2 + " -> " + isPalindrome(test2));
+        System.out.println(test3 + " -> " + isPalindrome(test3));
     }
 }
